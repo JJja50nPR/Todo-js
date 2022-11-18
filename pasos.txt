@@ -1,0 +1,188 @@
+1- revisar si se tiene node con el siguiente comando 
+   node --version
+
+y el npm 
+   npm --version
+
+2- se escribe el comando npm init , esto hace para guiarnos ha crear el paquete package.json que nos dice a doc y a nosotros como funciona la app y que dependencias son necesarias
+
+solo se siguen los pasos de la info que se requiera , luego se puede cambiar igualmente, se crea el archivo package.json
+
+3 - Luego se realiza la configuracion del webpack con el comando npm install webpack webpack-cli --save-dev
+
+4 - se crea el archivo de configuracion con el siguiente nombre webpack.config.js , con la siguiente estructura: 
+
+module.exports = {
+    mode: 'development',
+
+    module: {
+        rules: []
+
+    }, 
+
+
+    optimization : {},
+
+    plugins: [],
+
+}
+
+5 - se procede a la instalacion del html loader con el siguiente comando npm install --save-dev html-loader , cuya funcion es cargar el html
+
+luego el html webpack plugin con el siguiente comando npm install --save-dev html-webpack-plugin que hace la inyeccion del archivo.js en el archivo html y otros tipos de controles
+
+posteriomente se agrega la siguiente info en el archivo webpack.config.js
+
+const HtmlWebPack = require('html-webpack-plugin')
+
+
+const HtmlWebPack = require('html-webpack-plugin')
+
+
+
+module.exports = {
+    mode: 'development',
+
+    output: {
+        clean : true, // limpia archivos innecesarios en el dist y lo vuelve a crear
+
+
+    },
+
+    module: {
+        rules: [
+            {
+                test: /\.html$/, // barre los archivos del pryecto hasta encontrar uno con la extension html
+                loader: 'html-loader', // luego se carga el html
+                options: {
+                    sources : false // realiza acciones automaticas , como cargas de imagenes 
+                }
+
+            }
+        ]
+
+    }, 
+
+
+    optimization : {},
+
+    plugins: [
+        new HtmlWebPack({
+            title: 'Mi Webpack App', // cambiar titulo del archivo html
+            filename: 'index.html', // cambiar nombre del archivo
+            template : './src/index.html' // indica del archivo del cual se va a basar
+
+        })
+            
+    ]
+
+}
+
+6 - seguidamente se crea el dev server con el siguiente comando npm i -D webpack-dev-server y se agrega en el package.json la dependencia
+
+7 - se hace la importacion de estilos , con el css loader utilizando el comando npm install --save-dev css-loadertall --save-dev css-loader style-loader, ademas se agrega las siguientes reglas 
+
+            {
+                test: /\.css$/,
+                use: ['style-loader', 'css-loader']
+            },
+
+8- se hace el archivo global de css y en la carpeta src , y se agrega la siguiente regla y modificacion 
+
+            {
+                test: /\.css$/,
+                exclude: /styles.css$/,
+                use: ['style-loader', 'css-loader']
+            },
+            {
+                test: /styles.css$/,
+                
+9 - se hace la instalacion del css extract plugin con el siguiente comando : npm install --save-dev mini-css-extract-plugin , ademas se agrega el siguiente codigo en el webpack.config: const MiniCssExtract = require("mini-css-extract-plugin");
+
+10 - luego se completa la nueva regla con el siguiente cambio : 
+
+            {
+                test: /styles.css$/,
+                use: [ MiniCssExtract.loader, 'css-loader' ]
+
+            }
+
+11 - se agrega el plugin al archivo webpack : 
+
+    plugins: [
+        new HtmlWebPack({
+            title: 'Mi Webpack App', // cambiar titulo del archivo html
+            filename: 'index.html', // cambiar nombre del archivo
+            template : './src/index.html' // indica del archivo del cual se va a basar
+
+        }),
+
+        new MiniCssExtract({
+            filename : '[name].[fullhash].css',
+            ignoreOrder: false
+        })
+            
+    ]
+
+12 - para el control de iamgenes en la carpeta src se crea la carpeta assets y se agregan las imagenes que se ocupan
+
+13 - se hace la instalacion del file loader con el siguiente comando : npm install file-loader --save-dev
+
+14 - en el webpack config se agrega la siguiente regla : 
+
+            {
+                test: /\.(png|jpe?g|gif)$/,
+                loader: 'file-loader'
+            }
+        
+15 - para mover los archivos estaticos tipo imagen se hace la siguiente instalacion : npm install copy-webpack-plugin --save-dev , luego se agrega el siguiente codigo al webpack config: 
+
+const CopyPlugin = require("copy-webpack-plugin");
+
+new CopyPlugin({
+            patterns: [
+                { from: 'src/assets/', to: 'assets/'}
+            ]
+
+        })
+
+16 - se crea el archivo webpack.prod.js y se agrega el siguiente comando al package.json : "buils:dev": "webpack --config webpack.config.js"
+
+17 - luego se hace la siguiente instalacion : npm i -D css-minimizer-webpack-plugin terser-webpack-plugin
+
+18 - se agrega el siguiente codigo al archivo webpach.prod: 
+
+const CssMinimizer = require('css-minimizer-webpack-plugin');
+const Terser = require('terser-webpack-plugin');
+
+
+optimization : {
+        minimize : true,
+        minimizer: [
+            new CssMinimizer(),
+            new Terser(),
+
+        ]
+    },
+
+19 - se instala babel con el siguiente comando : npm install --save-dev babel-loader @babel/core
+
+20 - se agrega la siguiente regla en el arvhivo webpack.prod : 
+
+            {
+                test: /\.m?js$/,
+                exclude: /node_modules/,
+                use: {
+                  loader: "babel-loader",
+                  options: {
+                    presets: ['@babel/preset-env']
+                  }
+                }
+            }
+
+21 - se hace la siguiente instalacion npm install @babel/preset-env --save-dev y se crea el archivo babel.config.json
+
+22 - en el archivo babel.config.json se agrega el siguiente codigo : 
+{
+    "presets": ["@babel/preset-env"]
+}
