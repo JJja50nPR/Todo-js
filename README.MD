@@ -1,7 +1,7 @@
-# Webpack
+# Todo App
 
 
-Este es el proyecto inicial para crear aplicaciones utilizando webpack
+Este proyecto se hizo utilizando webpack por lo tanto : 
 
 ### Notas
 
